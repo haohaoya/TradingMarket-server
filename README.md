@@ -41,7 +41,50 @@
 |35|支付|alipay|支付宝支付|
 |36|支付|alipayNotify|支付宝支付回调|
 
+## 基础请求和响应报文
 
+```json
+请求：
+{
+  "token": "abcdefghijklmnopqrstuvwxyz123",
+  "requestId": "qwertyuiopasdfghjklzxcvbnm123",
+  "timestamp": 123456789012,
+  "deviceId": "iPhone 9",
+  "clientVersion": "1.0.0"
+}
+
+响应：
+{
+  "code": 0,
+  "message": "success",
+  "result": null,
+  "responId": "zxcvbnmasdfghjklqwertyuiop123",
+  "timestamp": 123456789013
+ }
+```
+
+code:
+-   0: 成功
+-  -1: 失败
+-  -2: 参数异常
+- 999: 令牌失效
+
+## 数据库配置
+
+- 用户信息表
+    - 用户编号
+    - 手机号
+- 商品表
+- 商品类别表
+- 订单表
+- 支付流水表
+- 支付回调通知流水表
+- 点赞表
+- 评论回复表
+- 聊天主表
+- 聊天列表
+- 聊天详情表
+- 请求流水表
 
 
 
