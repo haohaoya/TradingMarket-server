@@ -2,6 +2,11 @@
 贸易市场 Java springboot+spring mvc+mybatis后端接口项目
 
 ## 功能设计
+***使用mysql存储基础业务数据***
+***使用mybatis做持久层业务开发***
+***使用springboot作为web容器***
+***使用springMVC做页面分发控制 全局异常捕获***
+***使用springAOP做日志记录***
 - 用户模块
     - 注册     ***使用aliyun-SMS实现验证码发送***
     - 登录
