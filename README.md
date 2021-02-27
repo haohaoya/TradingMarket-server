@@ -124,6 +124,7 @@ code:
 - 请求流水表
 - Banner表
 - 交易流水表
+具体见TradingMaeket/doc/sql/trading_market.sql文件
 
 
 
