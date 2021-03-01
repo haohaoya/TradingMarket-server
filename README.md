@@ -1,4 +1,7 @@
 # TradingMarket-server
+
+项目地址：http://123.56.106.180
+
 贸易市场 Java springboot+spring mvc+mybatis后端接口项目
 
 ## 功能设计
