@@ -122,6 +122,9 @@ code:
 - 聊天列表
 - 聊天详情表
 - 请求流水表
+- Banner表
+- 交易流水表
+具体见TradingMaeket/doc/sql/trading_market.sql文件
 
 
 
