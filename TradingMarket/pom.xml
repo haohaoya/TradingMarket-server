@@ -90,6 +90,19 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <!-- commons -->
+        <!-- mathUtils -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <!-- stringUtils -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
         <!-- pagehelper -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -151,7 +164,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>top.duanhaohao.market.TradingMarketApplication</mainClass>
+                    <mainClass>top.hhduan.market.TradingMarketApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

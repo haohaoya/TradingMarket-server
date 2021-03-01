@@ -20,9 +20,9 @@
         </plugin>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/market"
+                        connectionURL="jdbc:mysql://localhost:3306/trading_market"
                         userId="root"
-                        password="等会配置">
+                        password="123456">
         </jdbcConnection>
 
         <!-- type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl" -->
@@ -30,11 +30,11 @@
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="top.duanhaohao.market.entity" targetProject=".\src\main\java"/>
+        <javaModelGenerator targetPackage="top.hhduan.market.entity" targetProject=".\src\main\java"/>
 
         <sqlMapGenerator targetPackage="mapper"  targetProject=".\src\main\resources"/>
 
-        <javaClientGenerator targetPackage="top.duanhaohao.market.mapper" targetProject=".\src\main\java" type="XMLMAPPER" />
+        <javaClientGenerator targetPackage="top.hhduan.market.mapper" targetProject=".\src\main\java" type="XMLMAPPER" />
 
         <table tableName="address" delimitIdentifiers="true" delimitAllColumns="true">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>

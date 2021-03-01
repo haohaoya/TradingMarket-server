@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.hhduan.market.mapper.ProductMapper">
+  <resultMap id="BaseResultMap" type="top.hhduan.market.entity.Product">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="product_imgs" jdbcType="VARCHAR" property="productImgs" />
+    <result column="product_desc" jdbcType="VARCHAR" property="productDesc" />
+    <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
+    <result column="product_type_id" jdbcType="INTEGER" property="productTypeId" />
+    <result column="publish_user_id" jdbcType="VARCHAR" property="publishUserId" />
+    <result column="product_address" jdbcType="VARCHAR" property="productAddress" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+
+  <!-- 商品详情 -->
+  <select id="selectProductDetail" parameterType="integer" resultType="top.hhduan.market.vo.ProductDetailsVO">
+    SELECT
+      pro.publish_user_id publishUserId,
+      us.user_name publishUserName,
+      us.user_avatar publishUserAvatar,
+      pro.create_time publishTime,
+      IFNULL(pr.`status`,2) praiseStatus,
+      pro.id productId,
+      pro.product_imgs productImgs,
+      pro.product_desc productDesc,
+      pro.product_price productPrice,
+      pt.id productTypeId,
+      pt.`name` productTypeName,
+      t.wantNum,
+      pro.product_address productAddress
+
+    FROM product pro
+    LEFT JOIN `user` us ON pro.publish_user_id = us.user_id
+    LEFT JOIN (SELECT COUNT(1) wantNum,product_id FROM chat c GROUP BY product_id) t ON pro.id = t.product_id
+    LEFT JOIN product_type pt ON pro.product_type_id = pt.id
+    LEFT JOIN praise pr ON pro.id = pr.product_id AND pr.user_id = us.user_id
+    WHERE pro.id = #{productId}
+
+  </select>
+
+  <!-- 首页商品查询 -->
+  <select id="selectProductList" parameterType="top.hhduan.market.bo.ProductSearchBO" resultType="top.hhduan.market.vo.ProductVO">
+    SELECT
+        p.id,
+        p.product_imgs productImgs,
+        p.product_desc productDesc,
+        p.product_price productPrice,
+        p.product_type_id productTypeId,
+        t.wantNum,
+        pt.`name` productTypeName,
+        p.publish_user_id publishUserId,
+        u.user_name publishUserName,
+        u.user_avatar publishUserAvatar,
+        o.buying_user_id buyingUserId,
+        o.trade_status tradeStatus,
+        p.create_time createTime,
+        o.completion_time tradeTime,
+        p.product_address productAddress
+    FROM
+        product p
+    LEFT JOIN product_type pt ON p.product_type_id = pt.id
+    LEFT JOIN `order` o ON p.id = o.product_id
+    LEFT JOIN (SELECT COUNT(1) wantNum,product_id FROM chat c GROUP BY product_id) t ON p.id = t.product_id
+    LEFT JOIN `user` u ON p.publish_user_id = u.user_id
+    <where>
+      <if test="productDesc != null and productDesc != ''">
+        and p.product_desc like concat('%', #{productDesc}, '%')
+      </if>
+      <if test="productTypeId != null">
+        and p.product_type_id = #{productTypeId}
+      </if>
+      and (o.order_id is null or o.trade_status in (1, 2))
+    </where>
+    group by p.id
+    order by IFNULL(o.trade_status, 4) DESC, p.create_time DESC
+  </select>
+
+  <!-- 个人中心商品查询 -->
+  <select id="selectMyProductList" parameterType="string" resultType="top.hhduan.market.vo.ProductVO">
+    SELECT
+    p.id,
+    p.product_imgs productImgs,
+    p.product_desc productDesc,
+    p.product_price productPrice,
+    p.product_type_id productTypeId,
+    t.wantNum,
+    pt.`name` productTypeName,
+    p.publish_user_id publishUserId,
+    u.user_name publishUserName,
+    u.user_avatar publishUserAvatar,
+    o.buying_user_id buyingUserId,
+    o.trade_status tradeStatus,
+    p.create_time createTime,
+    o.completion_time tradeTime,
+    o.order_id orderId,
+    p.product_address productAddress
+    FROM
+    product p
+    LEFT JOIN product_type pt ON p.product_type_id = pt.id
+    LEFT JOIN (SELECT COUNT(1) wantNum,product_id FROM chat c GROUP BY product_id) t ON p.id = t.product_id
+    LEFT JOIN `order` o ON p.id = o.product_id
+    LEFT JOIN `user` u ON p.publish_user_id = u.user_id
+    <where>
+      <if test="type != null and type == 1">
+        and p.publish_user_id = #{userId}
+        and (o.order_id IS NULL or o.trade_status = 2)
+      </if>
+      <if test="type != null and type == 2">
+        and p.publish_user_id = #{userId}
+        and o.selling_status = 1
+        and o.trade_status in(1, 3)
+      </if>
+      <if test="type != null and type == 3">
+        and o.buying_user_id = #{userId}
+        and o.buying_status = 1
+        and o.trade_status in(1, 3)
+      </if>
+
+    </where>
+      group by p.id
+      <if test="type != null and type == 1">
+          order by p.create_time desc
+      </if>
+      <if test="type != null and type != 1">
+          order by o.completion_time desc
+      </if>
+
+  </select>
+
+  <select id="selectProductNum" parameterType="string" resultType="top.hhduan.market.vo.ProductNumVO">
+    SELECT
+        IFNULL(SUM(CASE WHEN p.publish_user_id = #{userId} AND (o.trade_status = 2 or o.order_id is null) THEN 1 ELSE 0 END), 0) publishNum,
+        IFNULL(SUM(CASE WHEN p.publish_user_id = #{userId} AND (o.trade_status = 2 or o.order_id is null) THEN p.product_price ELSE 0 END), 0.00) publishAmount,
+        IFNULL(SUM(CASE WHEN p.publish_user_id = #{userId} AND o.trade_status in(1, 3) AND o.selling_status = 1 THEN 1 ELSE 0 END), 0) saleNum,
+        IFNULL(SUM(CASE WHEN p.publish_user_id = #{userId} AND o.trade_status in(1, 3) AND o.selling_status = 1 THEN p.product_price ELSE 0 END), 0.00) saleAmount,
+        IFNULL(SUM(CASE WHEN o.buying_user_id = #{userId} AND o.trade_status in(1, 3) AND o.buying_status = 1 THEN 1 ELSE 0 END), 0) purchaseNum,
+        IFNULL(SUM(CASE WHEN o.buying_user_id = #{userId} AND o.trade_status in(1, 3) AND o.buying_status = 1 THEN p.product_price ELSE 0 END), 0.00) purchaseAmount
+    FROM product p
+    LEFT JOIN (
+			SELECT t1.* FROM `order` t1
+			INNER JOIN (
+				SELECT MAX(order_id) max_order_id, o.* FROM `order` o GROUP BY product_id
+			) t2 ON t1.order_id = t2.max_order_id
+		) o ON o.product_id = p.id
+
+  </select>
+
+
+
+
+
+  <select id="selectProductInfoAndTradeStatus" parameterType="integer" resultType="top.hhduan.market.vo.ProductVO">
+     SELECT
+        p.id,
+        p.product_imgs productImgs,
+        p.product_desc productDesc,
+        p.product_price productPrice,
+        p.product_type_id productTypeId,
+        p.publish_user_id publishUserId,
+        o.buying_user_id buyingUserId,
+        ifnull(o.trade_status, 2) tradeStatus,
+        p.create_time createTime,
+        o.completion_time tradeTime,
+        o.order_id orderId
+    FROM
+        product p
+    LEFT JOIN `order` o ON p.id = o.product_id
+    WHERE p.id = #{productId}
+    ORDER BY o.create_time DESC LIMIT 1
+  </select>
+</mapper>

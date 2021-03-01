@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.hhduan.market.mapper.ChatListMapper">
+  <resultMap id="BaseResultMap" type="top.hhduan.market.entity.ChatList">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="chat_id" jdbcType="VARCHAR" property="chatId" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_avatar" jdbcType="VARCHAR" property="userAvatar" />
+    <result column="another_user_id" jdbcType="VARCHAR" property="anotherUserId" />
+    <result column="another_user_name" jdbcType="VARCHAR" property="anotherUserName" />
+    <result column="another_user_avatar" jdbcType="VARCHAR" property="anotherUserAvatar" />
+    <result column="is_online" jdbcType="TINYINT" property="isOnline" />
+    <result column="unread" jdbcType="TINYINT" property="unread" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="selectChatList" parameterType="string" resultType="top.hhduan.market.vo.ChatVO">
+    SELECT
+        cl.chat_id chatId,
+        cl.user_id userId,
+        cl.user_name userName,
+        cl.user_avatar userAvatar,
+        cl.another_user_id anotherUserId,
+        cl.another_user_name anotherUserName,
+        cl.another_user_avatar anotherUserAvatar,
+        cl.unread,
+        cl.create_time createTime,
+        cl.update_time updateTime,
+        cd.content lastChatContent,
+        p.id productId,
+        p.product_imgs productImgs,
+        p.product_price productPrice
+    FROM chat_list cl
+    LEFT JOIN chat_detail cd ON cl.chat_id = cd.chat_id AND cd.is_latest = 1
+    LEFT JOIN product p ON p.id = cl.product_id
+    WHERE cl.`status` = 1 AND cl.user_id = #{userId}
+    ORDER BY cl.update_time DESC
+
+  </select>
+
+</mapper>

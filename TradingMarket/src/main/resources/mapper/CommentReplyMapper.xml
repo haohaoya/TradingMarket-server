@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.hhduan.market.mapper.CommentReplyMapper">
+  <resultMap id="BaseResultMap" type="top.hhduan.market.entity.CommentReply">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="from_user_id" jdbcType="VARCHAR" property="fromUserId" />
+    <result column="from_user_name" jdbcType="VARCHAR" property="fromUserName" />
+    <result column="from_user_avatar" jdbcType="VARCHAR" property="fromUserAvatar" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="to_user_id" jdbcType="VARCHAR" property="toUserId" />
+    <result column="to_user_name" jdbcType="VARCHAR" property="toUserName" />
+    <result column="to_user_avatar" jdbcType="VARCHAR" property="toUserAvatar" />
+    <result column="reply_id" jdbcType="INTEGER" property="replyId" />
+  </resultMap>
+</mapper>

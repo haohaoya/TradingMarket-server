@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.hhduan.market.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="top.hhduan.market.entity.Order">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="buying_user_id" jdbcType="VARCHAR" property="buyingUserId" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="trade_status" jdbcType="TINYINT" property="tradeStatus" />
+    <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+    <result column="buying_status" jdbcType="TINYINT" property="buyingStatus" />
+    <result column="selling_status" jdbcType="TINYINT" property="sellingStatus" />
+    <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
+    <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="completion_time" jdbcType="TIMESTAMP" property="completionTime" />
+    <result column="out_trade_no" jdbcType="VARCHAR" property="outTradeNo" />
+    <result column="consignee_mobile" jdbcType="VARCHAR" property="consigneeMobile" />
+    <result column="consignee_name" jdbcType="VARCHAR" property="consigneeName" />
+    <result column="consignee_address" jdbcType="VARCHAR" property="consigneeAddress" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+
+  <select id="selectOrderDetailByOrderId" parameterType="int" resultType="top.hhduan.market.vo.OrderVO">
+    SELECT
+        o.order_id orderId,
+        o.order_amount orderAmount,
+        o.pay_status payStatus,
+        o.trade_status tradeStatus,
+        o.create_time createTime,
+        o.consignee_address consigneeAddress,
+        o.consignee_mobile consigneeMobile,
+        o.consignee_name consigneeName,
+        p.product_desc productDesc,
+        p.product_imgs productImgs,
+        u.user_name buyerUserName
+    FROM `order` o
+    LEFT JOIN product p ON o.product_id = p.id
+    LEFT JOIN `user` u ON o.buying_user_id = u.user_id
+    WHERE o.order_id = #{orderId}
+  </select>
+</mapper>
